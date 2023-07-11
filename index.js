@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const expireJobs = require('./jobs/expireJobs');
 const userRoutes = require('./routes/userRoutes');
 
 // require('dotenv').config();
@@ -16,6 +17,7 @@ mongoose.connect('mongodb://admin:password@mongodb:27017/?authMechanism=DEFAULT&
 
 // Use routes
 app.use('/api/users', userRoutes);
+app.use('/api/bookings', bookingRoutes);
 
 const port = process.env.PORT || 5000;
 app.listen(port, () => console.log(`Server started on port ${port}`));
