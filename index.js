@@ -1,10 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
-// const expireJobs = require('./jobs/expireJobs');
 const userRoutes = require('./routes/userRoutes');
-const bookingRoutes = require('./routes/bookingRoutes')
-
-// require('dotenv').config();
+const bookingRoutes = require('./routes/bookingRoutes');
+const hubRoutes = require('./routes/hubRoutes');  
 
 const app = express();
 
@@ -15,13 +13,13 @@ mongoose.connect('mongodb://admin:password@mongodb:27017/?authMechanism=DEFAULT&
     .then(() => console.log('MongoDB connected...'))
     .catch((err) => console.log(err));
 
-
 // Use routes
 app.use('/api/users', userRoutes);
 app.use('/api/bookings', bookingRoutes);
+app.use('/api/hubs', hubRoutes);  // New line: Use hub routes
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
-    //expireJobs; // Start the expiry jobs
-  });
+    // expireJobs; // Start the expiry jobs
+});

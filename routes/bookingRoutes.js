@@ -8,8 +8,8 @@ const auth = require('../middleware/auth');
 router.post('/', auth, async (req, res) => {
     const { status, client, createdBy, startTime, fromHub, toHub } = req.body;
     try {
-        const admin = await User.findById(req.user.id);
-        if (!admin || !admin.admin) {
+        const user = await User.findById(req.user.id);
+        if (!user || user.type === 'Partner') {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
@@ -97,8 +97,13 @@ router.put('/start/:id', auth, async (req, res) => {
             return res.status(400).json({ msg: 'Booking not assigned to you' });
         }
 
+        const now = Date.now();
+        if (now < booking.startTime) {
+            return res.status(400).json({ msg: 'Booking cannot be started before the scheduled start time' });
+        }
+
         booking.status = 'in_progress';
-        booking.actualStartTime = Date.now();
+        booking.actualStartTime = now;
         await booking.save();
 
         res.json(booking);
