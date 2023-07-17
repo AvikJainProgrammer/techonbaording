@@ -65,8 +65,8 @@ router.put('/apply/:id', auth, async (req, res) => {
             return res.status(404).json({ msg: 'Booking not found' });
         }
 
-        if (booking.partner) {
-            return res.status(400).json({ msg: 'Booking already assigned' });
+        if (booking.status !== 'created') {
+            return res.status(400).json({ msg: 'Booking is not in a state that allows applying' });
         }
 
         booking.partner = req.user.id;
@@ -93,8 +93,8 @@ router.put('/start/:id', auth, async (req, res) => {
             return res.status(404).json({ msg: 'Booking not found' });
         }
 
-        if (!booking.partner || booking.partner.toString() !== req.user.id.toString()) {
-            return res.status(400).json({ msg: 'Booking not assigned to you' });
+        if (booking.status !== 'assigned') {
+            return res.status(400).json({ msg: 'Booking is not in a state that allows starting' });
         }
 
         const now = Date.now();
@@ -126,8 +126,8 @@ router.put('/end/:id', auth, async (req, res) => {
             return res.status(404).json({ msg: 'Booking not found' });
         }
 
-        if (!booking.partner || booking.partner.toString() !== req.user.id.toString()) {
-            return res.status(400).json({ msg: 'Booking not assigned to you' });
+        if (booking.status !== 'in_progress') {
+            return res.status(400).json({ msg: 'Booking is not in a state that allows ending' });
         }
 
         booking.status = 'completed';

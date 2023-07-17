@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
 const bookingRoutes = require('./routes/bookingRoutes');
 const hubRoutes = require('./routes/hubRoutes');  
+const expireJobs = require('./jobs/expireJobs');  // Add this line
 
 const app = express();
 
@@ -21,5 +22,5 @@ app.use('/api/hubs', hubRoutes);  // New line: Use hub routes
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server started on port ${PORT}`);
-    // expireJobs; // Start the expiry jobs
+    expireJobs;
 });
