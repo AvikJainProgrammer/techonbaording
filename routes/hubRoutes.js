@@ -3,9 +3,22 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Hub = require('../models/Hub');
 const User = require('../models/User');
+const { check, validationResult } = require('express-validator');
 
 // Create a hub
-router.post('/', auth, async (req, res) => {
+router.post('/', [
+    auth,
+    check('name', 'Name is required').not().isEmpty(),
+    check('location', 'Location is required and should be an object').isObject(),
+    check('location.longitude', 'Location should have longitude').exists(),
+    check('location.latitude', 'Location should have latitude').exists()
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+
     try {
         const user = await User.findById(req.user.id);
         if (!user.admin) {
@@ -28,7 +41,18 @@ router.post('/', auth, async (req, res) => {
 });
 
 // Update a hub
-router.put('/:id', auth, async (req, res) => {
+router.put('/:id', [
+    auth,
+    check('name', 'Name is required').not().isEmpty(),
+    check('location', 'Location is required and should be an object').isObject(),
+    check('location.longitude', 'Location should have longitude').exists(),
+    check('location.latitude', 'Location should have latitude').exists()
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const user = await User.findById(req.user.id);
         if (!user.admin) {
@@ -75,6 +99,10 @@ router.delete('/:id', auth, async (req, res) => {
 
 // List all hubs
 router.get('/', async (req, res) => {
+    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+        return res.status(400).json({ msg: 'Invalid hub ID' });
+    }
+
     try {
         const hubs = await Hub.find().populate('owner', ['name']);
         res.json(hubs);
