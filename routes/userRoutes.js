@@ -3,9 +3,22 @@ const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const bcrypt = require('bcryptjs');
+const { check, validationResult } = require('express-validator');
 const router = express.Router();
 
-router.post('/register', async (req, res) => {
+router.post('/register', [
+    check('name', 'Name is required').not().isEmpty(),
+    check('phone', 'Phone is required and should be a number').isNumeric(),
+    check('password', 'Please enter a password with 6 or more characters').isLength({ min: 6 }),
+    check('type', 'Type is required and should be either Client or Partner').isIn(['Client', 'Partner']),
+    check('admin', 'Admin should be a boolean').isBoolean()
+], async (req, res) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
     try {
         const { name, phone, password, type, admin } = req.body;
 
@@ -47,7 +60,10 @@ router.post('/register', async (req, res) => {
     }
 });
 
-router.post('/login', async (req, res) => {
+router.post('/login',[
+    check('phone', 'Phone is required and should be a number').isNumeric(),
+    check('password', 'Password is required').exists()
+], async (req, res) => {
     try {
         const { phone, password } = req.body;
 

@@ -8,7 +8,7 @@ const User = require('../models/User');
 router.post('/', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (!user || !user.admin) {
+        if (!user.admin) {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
@@ -31,7 +31,7 @@ router.post('/', auth, async (req, res) => {
 router.put('/:id', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (!user || !user.admin) {
+        if (!user.admin) {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
@@ -57,7 +57,7 @@ router.put('/:id', auth, async (req, res) => {
 router.delete('/:id', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (!user || !user.admin) {
+        if (!user.admin) {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
