@@ -104,9 +104,6 @@ router.delete('/:id', auth, async (req, res) => {
 
 // List all hubs
 router.get('/', async (req, res) => {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
-        return res.status(400).json({ msg: 'Invalid hub ID' });
-    }
 
     try {
         const hubs = await Hub.find().populate('owner', ['name']);
