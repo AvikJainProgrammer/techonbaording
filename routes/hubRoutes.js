@@ -3,6 +3,7 @@ const router = express.Router();
 const auth = require('../middleware/auth');
 const Hub = require('../models/Hub');
 const User = require('../models/User');
+const mongoose = require('mongoose');
 const { check, validationResult } = require('express-validator');
 
 // Create a hub
