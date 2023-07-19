@@ -10,9 +10,11 @@ const { check, validationResult } = require('express-validator');
 router.post('/', [
     auth,
     check('name', 'Name is required').not().isEmpty(),
-    check('location', 'Location is required and should be an object').isObject(),
-    check('location.longitude', 'Location should have longitude').exists(),
-    check('location.latitude', 'Location should have latitude').exists()
+    check('location.coordinates', 'Coordinates are required and should be an array of two numbers')
+        .isArray({ min: 2, max: 2 })
+        .custom((val) => {
+            return val.every(Number.isFinite);
+        }),
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
@@ -45,9 +47,11 @@ router.post('/', [
 router.put('/:id', [
     auth,
     check('name', 'Name is required').not().isEmpty(),
-    check('location', 'Location is required and should be an object').isObject(),
-    check('location.longitude', 'Location should have longitude').exists(),
-    check('location.latitude', 'Location should have latitude').exists()
+    check('location.coordinates', 'Coordinates are required and should be an array of two numbers')
+        .isArray({ min: 2, max: 2 })
+        .custom((val) => {
+            return val.every(Number.isFinite);
+        }),
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
