@@ -9,7 +9,7 @@ router.post('/', auth, async (req, res) => {
     const { status, client, createdBy, startTime, fromHub, toHub } = req.body;
     try {
         const user = await User.findById(req.user.id);
-        if (!user || user.type === 'Partner') {
+        if (user.type === 'Partner') {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
@@ -56,7 +56,7 @@ router.get('/', async (req, res) => {
 router.put('/apply/:id', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (!user || user.type !== 'Partner') {
+        if (user.type !== 'Partner') {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
@@ -84,7 +84,7 @@ router.put('/apply/:id', auth, async (req, res) => {
 router.put('/start/:id', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (!user || user.type !== 'Partner') {
+        if (user.type !== 'Partner') {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 
@@ -117,7 +117,7 @@ router.put('/start/:id', auth, async (req, res) => {
 router.put('/end/:id', auth, async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
-        if (!user || user.type !== 'Partner') {
+        if (user.type !== 'Partner') {
             return res.status(401).json({ msg: 'Unauthorized' });
         }
 

@@ -32,8 +32,13 @@ router.post('/register', async (req, res) => {
             }
         };
 
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5 days' }, (err, token) => {
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5 days' }, async (err, token) => {
             if (err) throw err;
+            
+            // Save token to user
+            user.tokens = user.tokens.concat({ token });
+            await user.save();
+    
             res.json({ token });
         });
     } catch (err) {
@@ -62,8 +67,13 @@ router.post('/login', async (req, res) => {
             }
         };
 
-        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5 days' }, (err, token) => {
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '5 days' }, async (err, token) => {
             if (err) throw err;
+            
+            // Save token to user
+            user.tokens = user.tokens.concat({ token });
+            await user.save();
+    
             res.json({ token });
         });
     } catch (err) {

@@ -9,8 +9,16 @@ const UserSchema = new mongoose.Schema({
     createdAt: { type: Date, default: Date.now },
     updatedAt: { type: Date, default: Date.now },
     type: { type: String, enum: ['Client', 'Partner'], required: true },
-    admin: { type: Boolean, default: false }
-});
+    admin: { type: Boolean, default: false },
+    tokens: [
+        {
+            token: {
+                type: String,
+                required: true
+            }
+        }
+    ]
+}); 
 
 // Hash password before saving the user
 UserSchema.pre('save', async function(next) {
