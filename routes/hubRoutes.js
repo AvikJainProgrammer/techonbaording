@@ -1,8 +1,8 @@
-// routes/hub.js
+// routes/hubRoutes.js
 const express = require('express');
+const { check, validationResult } = require('express-validator');
 const auth = require('../middleware/auth');
-const { check } = require('express-validator');
-const hubController = require('../controllers/hubController');
+const hubService = require('../services/hubService');
 
 const router = express.Router();
 
@@ -14,7 +14,21 @@ router.post('/', [
         .custom((val) => {
             return val.every(Number.isFinite);
         }),
-], hubController.create);
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
+
+    try {
+        const { name, location } = req.body;
+        const hub = await hubService.createHub(name, location, req.user.id);
+        res.json(hub);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
 
 router.put('/:id', [
     auth,
@@ -24,10 +38,40 @@ router.put('/:id', [
         .custom((val) => {
             return val.every(Number.isFinite);
         }),
-], hubController.update);
+], async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+    }
 
-router.delete('/:id', auth, hubController.remove);
+    try {
+        const { name, location } = req.body;
+        const hub = await hubService.updateHub(req.params.id, name, location, req.user.id);
+        res.json(hub);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
 
-router.get('/', hubController.list);
+router.delete('/:id', auth, async (req, res) => {
+    try {
+        await hubService.deleteHub(req.params.id, req.user.id);
+        res.json({ msg: 'Hub removed' });
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+router.get('/', async (req, res) => {
+    try {
+        const hubs = await hubService.listHubs();
+        res.json(hubs);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
 
 module.exports = router;

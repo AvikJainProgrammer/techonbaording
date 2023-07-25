@@ -2,9 +2,9 @@
 
 const express = require('express');
 const router = express.Router();
-const bookingController = require('../controllers/bookingController');
+const bookingService = require('../services/bookingService');
 const auth = require('../middleware/auth');
-const { check } = require('express-validator');
+const { check, validationResult } = require('express-validator');
 
 router.post('/', [
     auth,
@@ -13,14 +13,77 @@ router.post('/', [
     check('startTime', 'Start Time is required').not().isEmpty(),
     check('fromHub', 'From Hub is required').not().isEmpty(),
     check('toHub', 'To Hub is required').not().isEmpty()
-], bookingController.createBooking);
+], async (req, res) => {
+    try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+            return res.status(400).json({ errors: errors.array() });
+        }
 
-router.get('/', bookingController.getRecentBookings);
+        const newBooking = await bookingService.createBooking({
+            ...req.body,
+            userId: req.user.id
+        });
 
-router.put('/apply/:id', auth, bookingController.applyBooking);
+        res.json(newBooking);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
 
-router.put('/start/:id', auth, bookingController.startBooking);
+router.get('/', async (req, res) => {
+    try {
+        const bookings = await bookingService.getRecentBookings({
+            pageSize: 10,
+            pageNumber: req.query.pageNumber,
+            keyword: req.query.keyword
+        });
 
-router.put('/end/:id', auth, bookingController.endBooking);
+        res.json(bookings);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+router.put('/apply/:id', auth, async (req, res) => {
+    try {
+        const booking = await bookingService.applyBooking({
+            userId: req.user.id,
+            bookingId: req.params.id,
+        });
+        res.json(booking);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+router.put('/start/:id', auth, async (req, res) => {
+    try {
+        const booking = await bookingService.startBooking({
+            userId: req.user.id,
+            bookingId: req.params.id,
+        });
+        res.json(booking);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
+
+router.put('/end/:id', auth, async (req, res) => {
+    try {
+        const booking = await bookingService.endBooking({
+            userId: req.user.id,
+            bookingId: req.params.id,
+        });
+        res.json(booking);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+});
 
 module.exports = router;
