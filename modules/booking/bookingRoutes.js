@@ -2,8 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const bookingService = require('../services/bookingService');
-const auth = require('../middleware/auth');
+const bookingService = require('./bookingService');  
+const auth = require('../../middleware/auth'); 
 const { check, validationResult } = require('express-validator');
 
 router.post('/', [

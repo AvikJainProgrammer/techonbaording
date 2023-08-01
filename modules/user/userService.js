@@ -1,7 +1,9 @@
-// services/userService.js
-const User = require('../models/User');
+// userService.js
+
+const User = require('./User'); 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
+
 
 async function registerUser(name, phone, password, type, admin) {
     // Check if user already exists

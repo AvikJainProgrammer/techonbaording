@@ -1,9 +1,10 @@
 // userRoutes.js
 
 const express = require('express');
-const auth = require('../middleware/auth');
-const userService = require('../services/userService');
+const auth = require('../../middleware/auth'); 
+const userService = require('./userService'); 
 const { check, validationResult } = require('express-validator');
+
 
 const router = express.Router();
 

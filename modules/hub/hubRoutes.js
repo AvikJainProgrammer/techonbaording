@@ -1,8 +1,10 @@
-// routes/hubRoutes.js
+// hubRoutes.js
+
 const express = require('express');
 const { check, validationResult } = require('express-validator');
-const auth = require('../middleware/auth');
-const hubService = require('../services/hubService');
+const auth = require('../../middleware/auth'); 
+const hubService = require('./hubService'); 
+
 
 const router = express.Router();
 

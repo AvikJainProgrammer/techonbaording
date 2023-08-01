@@ -1,9 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const userRoutes = require('./routes/userRoutes');
-const bookingRoutes = require('./routes/bookingRoutes');
-const hubRoutes = require('./routes/hubRoutes');  
-const expireJobs = require('./jobs/expireJobs');  // Add this line
+const userRoutes = require('./modules/user/userRoutes');
+const bookingRoutes = require('./modules/booking/bookingRoutes');
+const hubRoutes = require('./modules/hub/hubRoutes');  
+const expireJobs = require('./modules/jobs/expireJobs'); 
+
 
 const app = express();
 
