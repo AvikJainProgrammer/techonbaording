@@ -1,6 +1,6 @@
 // userService.js
 
-const User = require('./User'); 
+const User = require('./UserModel'); 
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 

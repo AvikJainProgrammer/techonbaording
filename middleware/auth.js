@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const User = require('../modules/user/User.js');
+const User = require('../modules/user/UserModel.js');
 
 module.exports = async function(req, res, next) {
     const token = req.header('x-auth-token');

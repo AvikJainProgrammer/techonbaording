@@ -1,7 +1,7 @@
 // bookingService.js
 
-const Booking = require('./Booking'); 
-const User = require('../user/User'); 
+const Booking = require('./BookingModel'); 
+const User = require('../user/UserModel'); 
 const mongoose = require('mongoose');
 
 const createBooking = async ({ status, client, createdBy, startTime, fromHub, toHub, userId }) => {

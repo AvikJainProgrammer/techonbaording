@@ -1,7 +1,7 @@
 // jobs/expireJobs.js
 
 const Bull = require('bull');
-const Booking = require('../booking/Booking');
+const Booking = require('../booking/BookingModel');
 
 // Initialize a new Bull queue
 const expireQueue = new Bull('bookings', {

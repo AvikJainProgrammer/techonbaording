@@ -1,7 +1,7 @@
 // hubService.js
 
-const Hub = require('./Hub'); 
-const User = require('../user/User'); 
+const Hub = require('./HubModel'); 
+const User = require('../user/UserModel'); 
 
 async function createHub(name, location, userId) {
     const user = await User.findById(userId);
